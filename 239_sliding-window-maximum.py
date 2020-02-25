@@ -13,6 +13,8 @@ class Solution:
             # remove indexes of elements not from sliding window
             # 这里i-k代表的就是如果队首元素是当前元素的窗口大小前元素，则弹出
             # 所有的队首元素都是当前窗口的最大元素
+            
+            # 在python里面，deq的默认函数就是isempty()
             if deq and deq[0] == i - k:
                 deq.popleft()
                 
