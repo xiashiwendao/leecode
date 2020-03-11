@@ -7,7 +7,7 @@ import java.util.PriorityQueue;
 class Solution {
     public List<Integer> topKFrequent(int[] nums, int k) {
       // build hash map : character and how often it appears
-      HashMap<Integer, Integer> count = new HashMap();
+      HashMap<Integer, Integer> count = new HashMap<Integer, Integer>();
       for (int n: nums) {
         count.put(n, count.getOrDefault(n, 0) + 1);
       }
@@ -24,7 +24,7 @@ class Solution {
       }
   
       // build output list
-      List<Integer> top_k = new LinkedList();
+      List<Integer> top_k = new LinkedList<Integer>();
       while (!heap.isEmpty())
         top_k.add(heap.poll());
       Collections.reverse(top_k);
