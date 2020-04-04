@@ -1,51 +1,30 @@
-import datetime
-
-
-def datetime_operate(n:int):
-    now = datetime.datetime.now()  # 获取当前时间
-    _new_date = now + datetime.timedelta(days=n)  # 获取指定天数后的新日期
-    new_date = _new_date.strftime("%Y%m%d")  # 转换为指定的输出格式
-    return new_date
-
-from matplotlib import pyplot as plt
-import math
-def drawEntropy():
-    x = list(range(1, 100, 1))
-    x = [item/100 for item in x]
-    y=[]
-    for item in x:
-        entropy = math.log2(item)
-        print('+++++ entropy: ', entropy, ', item: ', item)
-        y_temp = item*entropy
-        y.append(y_temp)
-    plt.plot(x, y)
-    plt.show()
-import json
-def dictToJson():
-    dic={1:"B", 2:"A"}
-    s=json.dumps(dic)
-    print('json: ', s)
-    dic_2=json.loads(s)
-    print('dict: ', dic_2)
 import numpy as np
-if __name__ == '__main__':
-    # print(datetime_operate(4))
-    # drawEntropy()
-    # dictToJson()
-    # for i in range(6, -1,-1):
-    #     print(i)
-    # a = 'Φ'
-    # b = 'Φ'
-    # if a is b:
-    #     print('a is b !')
-    # else:
-    #     print('they are not the same')
-    # ar=np.array([2,3,4,5])
-    # print(ar[0:0])
-    # from string import ascii_lowercase
-    # s = 'alablba'
-    # b = ['a','b','c','d','e','f']
-    # for index, item in enumerate(b):
-    #     print(index, item)
-    for i in range(6, 10):
-        print(i)
+from sklearn.decomposition import PCA, KernelPCA
+import matplotlib.pyplot as plt
+
+import math
+x=[]
+y=[]
+N = 500
+for i in range(N):
+    deg = np.random.randint(0,360)
+    if np.random.randint(0,2)%2==0:
+        x.append([6*math.sin(deg), 6*math.cos(deg)])
+        y.append(1)
+    else:
+        x.append([15*math.sin(deg), 15*math.cos(deg)])
+        y.append(0)
+y = np.array(y)
+x = np.array(x)
+print('ok')
+
+kpca = KernelPCA(kernel="rbf", n_components=14)
+x_kpca = kpca.fit_transform(x)
+
+from sklearn import svm
+clf = svm.SVC(kernel='linear')
+
+clf.fit(x_kpca[:0.8*N],y[:0.8*N])
+y0 = y[0.8*N:]
+y1 = clf.predict(x_kpca[0.8*N:])
+print(np.linalg.norm(y0-y1, 1))
