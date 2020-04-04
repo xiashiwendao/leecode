@@ -1,51 +1,42 @@
-import datetime
+one_bit_center = [0, 1, 8]
+two_bit_center = [11, 69, 88, 96]
+def center_rec(n, data):
+    if(n > 2):
+        center_rec(n-2, data)
+    if(len(data)==0):
+        if(n==1):
+            data = one_bit_center
+        elif(n==2):
+            data = two_bit_center
+        else:
+            print('error: data length is 0')
+    ret = []
+    for d in data:
+        for item in two_bit_center:
+            value = str(item)[0]+str(d)+str(item)[1]
+            ret.append(value)
 
+    return ret
 
-def datetime_operate(n:int):
-    now = datetime.datetime.now()  # 获取当前时间
-    _new_date = now + datetime.timedelta(days=n)  # 获取指定天数后的新日期
-    new_date = _new_date.strftime("%Y%m%d")  # 转换为指定的输出格式
-    return new_date
+def center_entry(n, data):
+    
+    if(n == 0):
+        return []
+    if(n == 1):
+        return one_bit_center
+    if(n==2):
+        return two_bit_center
 
-from matplotlib import pyplot as plt
-import math
-def drawEntropy():
-    x = list(range(1, 100, 1))
-    x = [item/100 for item in x]
-    y=[]
-    for item in x:
-        entropy = math.log2(item)
-        print('+++++ entropy: ', entropy, ', item: ', item)
-        y_temp = item*entropy
-        y.append(y_temp)
-    plt.plot(x, y)
-    plt.show()
-import json
-def dictToJson():
-    dic={1:"B", 2:"A"}
-    s=json.dumps(dic)
-    print('json: ', s)
-    dic_2=json.loads(s)
-    print('dict: ', dic_2)
-import numpy as np
-if __name__ == '__main__':
-    # print(datetime_operate(4))
-    # drawEntropy()
-    # dictToJson()
-    # for i in range(6, -1,-1):
-    #     print(i)
-    # a = 'Φ'
-    # b = 'Φ'
-    # if a is b:
-    #     print('a is b !')
-    # else:
-    #     print('they are not the same')
-    # ar=np.array([2,3,4,5])
-    # print(ar[0:0])
-    # from string import ascii_lowercase
-    # s = 'alablba'
-    # b = ['a','b','c','d','e','f']
-    # for index, item in enumerate(b):
-    #     print(index, item)
-    for i in range(6, 10):
-        print(i)
+    data = center_entry(n-2, data)
+    
+    ret = []
+    for d in data:
+        for item in two_bit_center:
+            value = str(item)[0]+str(d)+str(item)[1]
+            ret.append(value)
+
+    return ret
+
+if __name__ == "__main__":
+    ret = center_entry(5, [])
+    print(ret)
