@@ -1,31 +1,41 @@
-def binsearch(nums, target, low, high):
-    # 注意这里没有“=”，对于“=”场景在下面会一并处理
-    if(low > high):
-        return -1
-    
-    middle = low + int((high-low)/2)
-    print('middle:', middle,' low:',low, 'high:', high)
-    if(nums[middle] == target):
-        return middle
+import numpy as np
 
-    # 如果有low=hight之后，还是没有找到数据，那其实就是没有，即下面的最后一个分支，
-    # 因为middle将会-1，所以会出现low-high的情况，于是返回-1
-    if(nums[low]<nums[middle]):
-        if(nums[low]<=target and nums[middle]>target):
-            return binsearch(nums, target, low, middle-1)
-        else:
-            return binsearch(nums, target, middle+1, len(nums)-1)
-    else:
-        if(nums[middle]<target and nums[len(nums)-1]>=target):
-            return binsearch(nums, target, middle+1, len(nums)-1)
-        else:
-            return binsearch(nums, target, low, middle-1)
 
-    
+def meetingroot(time_list):
+    lst_timeChain = []
 
-def search(nums, target):
-    return binsearch(nums, target, 0, len(nums)-1)
+    for timenode in time_list:
+        insert_flag = False
+        for item_list in lst_timeChain:
+            for i, item in enumerate(item_list):
+                start = timenode[0]
+                end = timenode[1]
+                start_1 = item[0]
+                end_1 = item[1]
+                if(len(item_list) >= i+2):
+                    start_2 = item_list[i+1]
+                    end_2 = item_list[i+1]
+
+                    if end_1 < start and end < start_2:
+                        item_list.insert(i, timenode)
+                        insert_flag = True
+                else:
+                    if end_1 < start:
+                        item_list.append(timenode)
+                        insert_flag = True
+
+        if not insert_flag:
+            lst_timenode = [timenode]
+            lst_timeChain.append(lst_timenode)
+
+    return len(lst_timeChain)
+
 
 if __name__ == "__main__":
-    nums = [4,5,6,7,9,1,2,3]
-    print(search(nums, 8))
+    # lst = [[0, 30],[5, 10],[15, 20]]
+    lst = [[7, 10], [2, 4]]
+    lst = sorted(lst, key=lambda x: x[0])
+    # lst.sort(key=lambad x:x[0])
+    print('sorted list: ', lst)
+    room_size = meetingroot(lst)
+    print('room_size: ', room_size)
