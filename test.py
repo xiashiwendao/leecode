@@ -1,41 +1,33 @@
-import numpy as np
+def max_substring(strs):
+    hash_pos = dict()
+    i = 0 # 慢指针
+    j = 0 # 快指针
+    max_len = 0
+    for pos, char in enumerate(strs):
+        # 当前字符已经存在
+        if(char in hash_pos):
+            char_pos = hash_pos[char]
+            max_len = max(max_len, j - i)
+            # 重复字符以及前面的字符都要去掉
+            for tmp_pos in range(i, j+1):
+                tmp_char = strs[tmp_pos]
+                hash_pos.pop(tmp_char)
 
+            i = char_pos+1
+        # 当前字符不存在
+        else:
+            pass
+        j+=1
 
-def meetingroot(time_list):
-    lst_timeChain = []
-
-    for timenode in time_list:
-        insert_flag = False
-        for item_list in lst_timeChain:
-            for i, item in enumerate(item_list):
-                start = timenode[0]
-                end = timenode[1]
-                start_1 = item[0]
-                end_1 = item[1]
-                if(len(item_list) >= i+2):
-                    start_2 = item_list[i+1]
-                    end_2 = item_list[i+1]
-
-                    if end_1 < start and end < start_2:
-                        item_list.insert(i, timenode)
-                        insert_flag = True
-                else:
-                    if end_1 < start:
-                        item_list.append(timenode)
-                        insert_flag = True
-
-        if not insert_flag:
-            lst_timenode = [timenode]
-            lst_timeChain.append(lst_timenode)
-
-    return len(lst_timeChain)
-
+    max_len = max(max_len, j - i)
+    return max_len
 
 if __name__ == "__main__":
-    # lst = [[0, 30],[5, 10],[15, 20]]
-    lst = [[7, 10], [2, 4]]
-    lst = sorted(lst, key=lambda x: x[0])
-    # lst.sort(key=lambad x:x[0])
-    print('sorted list: ', lst)
-    room_size = meetingroot(lst)
-    print('room_size: ', room_size)
+    max_len = max_substring('defgafea')
+    print(max_len)
+    # d = dict()
+    # d['a']='A'
+    # d['b']='B'
+    # d['c']='C'
+
+    # print('a' in d)
