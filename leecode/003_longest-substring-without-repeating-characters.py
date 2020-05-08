@@ -64,8 +64,22 @@ def max_substring_2(strs):
 
     return max_len
 
+def max_substring_3(strs):
+    char_pos = dict()
+    max_len = 0
+    start_index = 0
+    for end_index in range(0, len(strs)):
+        char = strs[end_index]
+        if(char_pos.get(char) is not None):
+            start_index = max(start_index, char_pos[char]+1) # 注意这里不需要才能够dic中删掉char，因为后面会直接覆盖
+
+        char_pos[strs[end_index]] = end_index
+        max_len = max(max_len, end_index - start_index + 1)
+    
+    return max_len
+
 if __name__ == "__main__":
-    max_len = max_substring_2('defeafea')
+    max_len = max_substring_3('degfeafeauv')
     print(max_len)
     # d = dict()
     # d['a']='A'
