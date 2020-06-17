@@ -42,31 +42,28 @@ def merge_2(lst_segment):
     ret.append(pre_seg)
     # ret.append(pre_seg)
     for segment in lst:
+        pre_seg = ret.pop()
         next_seg = segment
         # 临近两个区间有交集
         if pre_seg[1] >= next_seg[0]:
             # 并且pre_seg和next_seg之间区间非包含关系（pre_seg > next_seg）
             if(pre_seg[1] < next_seg[1]):
                 next_seg = [pre_seg[0], next_seg[1]]
-                ret.remove(pre_seg) # 删除原范围
                 ret.append(next_seg)
             # pre_seg包含了next_seg，即next_seg无效，则next_seg继续沿用pre_seg
             else:
                 next_seg = pre_seg
+                ret.append(pre_seg)
         # 临近两个区间没有交集
         else:
-            if len(ret) == 0:
-                ret.append(pre_seg)
-            else:
-                ret.append(next_seg)
-
-        pre_seg = next_seg
+            ret.append(pre_seg)
+            ret.append(next_seg)
 
     return ret
 
 if __name__ == "__main__":
     lst_segment = [[1, 3], [2, 6],[2,3],[5,7], [15, 18], [8, 10]]
-    ret = merge(lst_segment)
+    ret = merge_2(lst_segment)
     for seg in ret:
         print(seg)
 
