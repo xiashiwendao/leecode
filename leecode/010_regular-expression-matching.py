@@ -58,7 +58,7 @@ def regular_analysis_ver1(s, p):
 # 第二个版本，首先进行后匹配，只有后匹配都OK了再进行前向匹配
 # 正则表达式的关键要理解模式字符串一个位置是可以匹配多个字符，
 # 如果不匹配则向后查找是否有匹配的
-def regular_analysis(s, p):
+def regular_analysis_ver2(s, p):
     match = True
     p_list = list(p)
     s_list = list(s)
@@ -92,6 +92,8 @@ def regular_analysis(s, p):
                 p_pos += 1
             else:
                 if p_ch == "*":
+                    if p_pos+1 > len(p_list)-1:
+                        break
                     # 取出前一个字符，看看是否匹配
                     if p_list[p_pos-1] == s_ch:
                         match = True
@@ -110,26 +112,84 @@ def regular_analysis(s, p):
                     p_pos +=1
                 # 非特殊字符的比较
                 else:
-                    # 首先判断模式前一个字符是否为*
-                    if p_list[p_pos-1] == "*":
-                        match=True
-                    # 字符间比较
+                    match = p_ch == s_ch
+                    if not match:
+                        # 首先判断模式前一个字符是否为*
+                        if p_list[p_pos+1] == "*":
+                            match=True
+                            p_pos +=1
                     else:
-                        match = p_ch == s_ch
                         p_pos +=1 # 只是match=True有意义
 
     return match
 
+def regular_analysis_rec_entry(s, p):
+    if s is None or p is None:
+        return False
+    
+    return regular_analysis_rec(s, 0, p, 0)
+
+def regular_analysis_rec(s, i, p, j):
+    m = len(s)
+    n = len(p)
+
+    if j == n:
+        return m == i
+    # 大部分判断都是走这个分支
+    if j == n-1 or p[j+1] != "*":
+        return i < m and (s[i] == p[j] or p[j] == ".") and regular_analysis_rec(s, i+1, p, j+1)
+    # 模式中有*的，会走进这个分支
+    if j < n and p[j+1] == "*":
+        while i < m and (s[i] == p[j] or p[j] == "."):
+            # 尝试和*后的字符匹配，如果不匹配则采用p的*前的字母和s当前字符进行匹配
+            if regular_analysis_rec(s, i, p, j+2):
+                return True
+            
+            i+=1
+    # 走到这一步一定是前一个字符为*，匹配失败后走这里，所以这里是j+2
+    return regular_analysis_rec(s, i, p, j+2)
+
+# 从后向前匹配
+def regular_analysis_rec_back_entry(s, p):
+    if s == None or p == None:
+        return False
+    
+    return regular_analysis_rec_back(s, len(s), p, len(p))
+
+def regular_analysis_rec_back(s, i, p, j):
+    # 模式到了head，匹配字符串必须要到head
+    if j == 0: 
+        return i == 0
+    # 字符串到了head，模式可以不到head，但是前面只能是a*这种
+    if i == 0:
+        return j > 1 and p[j -1] == "*" and regular_analysis_rec(s, i, p, j-2)
+    # 模式中字母匹配
+    if not p[j-1] == "*":
+        # 注意这里比较的i-1：j-1因为这里的i和j不是代表索引，而是代表长度，当前需要
+        # 比较的字符索引是长度-1
+        return isMatch(s[i-1], p[j-1]) and regular_analysis_rec(s, i-1, p, j-1)
+    # 模式中*匹配
+    return regular_analysis_rec_back(s, i-1, p, j-2)
+
+# 字符匹配判断
+def isMatch(s_char, p_char):
+    return p_char == "." or s_char == p_char
+
+
 if __name__ == "__main__":
+    s = 'abcd'
+    # p = 'abce'
     # s = 'ab'
     # p = '.*'
     # s = 'ab'
     # p = 'a*'
     # s = "aab"
     # p = "c*a*b"
+    # s = "aaabcd"
+    # p = "ac*a*b.."
     s = "mississippi"
     p = "mis*is*ip*."
-    ret = regular_analysis(s, p)
+    ret = regular_analysis_rec_back_entry(s, p)
     if(ret):
         print('match!')
     else:
