@@ -175,21 +175,46 @@ def regular_analysis_rec_back(s, i, p, j):
 def isMatch(s_char, p_char):
     return p_char == "." or s_char == p_char
 
+# 采用动态规划方式
+def isMatch_dyna_entry(s, p):
+    m = len(s)
+    n = len(p)
+    dp = []
+    s_0_match = [True] # (0, 0)是True，空字符串（长度为0）必然匹配
+    for j in range(1, n+1):
+        match = j > 1 and p[j-1] == "*" and s_0_match[j-2]
+        s_0_match.append(match)
+    dp.append(s_0_match)
+
+    for i in range(1, m+1):
+        match_lst = [False]
+        dp.append(match_lst)
+        for j in range(1, n+1):
+            if p[j-1] != "*":
+                # 为什么是i-1呢？
+                match = dp[i-1][j-1] and isMatch(s[i-1], p[i-1])
+                # match_lst.append(match)
+            else:
+                match = dp[i][j-2] or dp[i-1][j] and isMatch(s[i-1], p[j-2])
+
+            match_lst.append(match)
+
+    return dp[m][n]
 
 if __name__ == "__main__":
     s = 'abcd'
-    # p = 'abce'
-    # s = 'ab'
-    # p = '.*'
-    # s = 'ab'
-    # p = 'a*'
-    # s = "aab"
-    # p = "c*a*b"
+    p = 'abce'
+    s = 'ab'
+    p = '.*'
+    s = 'ab'
+    p = 'a*'
+    s = "aab"
+    p = "c*a*b"
     # s = "aaabcd"
     # p = "ac*a*b.."
-    s = "mississippi"
-    p = "mis*is*ip*."
-    ret = regular_analysis_rec_back_entry(s, p)
+    # s = "mississippi"
+    # p = "mis*is*ip*."
+    ret = isMatch_dyna_entry(s, p)
     if(ret):
         print('match!')
     else:
