@@ -1,3 +1,6 @@
+from matplotlib import pyplot as plt
+import pandas as pd
+
 # 暴力计算，两边扩充
 def max_area_fist(highs):
     max_area = 0
@@ -7,6 +10,7 @@ def max_area_fist(highs):
 
         left_end = right_end = False
         count = 1
+        
         for compare_index in range(len(highs)):
             left -= 1
             right += 1
@@ -39,9 +43,43 @@ def max_area_fist(highs):
         index+=1
     return max_area
 
+def max_area_stack(lst):
+    s = []
+    prev_item = 0
+    max_area = 0
+    for i in range(len(lst)):
+        item = lst[i]
+        if item > prev_item:
+            s.append((i, item))
+            prev_item = item
+            continue
+        if len(s) == 0:
+            continue
+        
+        while(len(s) > 1):
+            tmp_pair = s.pop()
+            index = tmp_pair[0]
+            high = tmp_pair[1]
+            if high > item:
+                width = i - index
+            else:
+                # 如果是最后一个则代表当前剩下的是最小的，width=全部；否则是i-index+1
+                if i == len(lst) -1:
+                    width = len(lst)
+                else:
+                    continue
+            area = width * high
+            max_area = max(area, max_area)
+            print("index: ", index, "; value is: ", high, "; area is: ", area, "; max is: ", max_area)
+
+        s.append((i, item))
+        prev_item = item
+    
+    return max_area
+
 if __name__ == "__main__":
-    lst = [2,1,5,6,2,3]
-    ret = max_area_fist(lst)
+    lst = [2,1,5,6,2,3,11,7,4,3]
+    ret = max_area_stack(lst)
     print(ret)
 
 '''
