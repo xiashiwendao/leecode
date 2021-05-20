@@ -5,6 +5,6 @@
         "**/.settings": true,
         "**/.factorypath": true
     },
-    "python.pythonPath": "C:\\Users\\python_gay\\AppData\\Local\\Programs\\Python\\Python36\\python.exe",
+    "python.pythonPath": "/home/lorry/anaconda3/envs/env_pytorch/bin/python",
     "python.languageSever": "Pylance"
 }
